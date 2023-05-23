@@ -1,7 +1,5 @@
 import userModal from "../models/userModal.js"
 import { securepassword } from "./othercontroller.js";
-import { generatejwt } from "./othercontroller.js";
-import bcrypt from "bcryptjs";
 
 export const getRegisterController = async (req, res, next) => {
     try {
@@ -44,17 +42,20 @@ export const loginController = async (req, res, next) => {
     }
 }
 
-export const forgotpassword = async (req, res, next) => {
-    const { email, mobile, birth } = req.body;
+export const updatePassword = async (req, res, next) => {
+    const { currentpassword, newpassword } = req.body;
     try {
-        const finduser = await userModal.findOne({ $and: [{ $or: [{ email: email }, { mobile: mobile }] }, { birth: birth }] })
-        if (finduser) {
-            const forgettoken = await generatejwt(finduser._id.valueOf())
-            res.status(200).send({
-                Barear: forgettoken, success: true
-            })
-        } else {
-            return next("User Not Found")
+            if(!newpassword){
+             return   next("Enter New Password First !")
+            }
+        const finduser = await userModal.findOne({ _id: req.user.userId })
+        const isMatch = await finduser.comparePassword(currentpassword)
+        if (isMatch) {
+            const hashpassword = await securepassword(newpassword)
+            await userModal.findByIdAndUpdate({ _id: req.user.userId }, { $set: { password: hashpassword } });
+            res.status(201).send({msg:"password Update Success",success:true})
+        }else{
+          return  next("Credentila MisMatch or Enter change Password")
         }
     } catch (error) {
         next(error)
@@ -63,10 +64,10 @@ export const forgotpassword = async (req, res, next) => {
 }
 
 export const resetpassword = async (req, res, next) => {
-    const { password ,mobile} = req.body;
+    const { password } = req.body;
     try {
         const finduserById = await userModal.findOne({ mobile: mobile })
-        if (finduserById._id.valueOf()=== req.user.userId) {
+        if (finduserById._id.valueOf() === req.user.userId) {
             const hashpassword = await securepassword(password)
             await userModal.findByIdAndUpdate({ _id: req.user.userId }, { $set: { password: hashpassword } })
             res.send({ msg: "password reset successfull", success: true })

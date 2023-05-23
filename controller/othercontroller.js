@@ -7,7 +7,6 @@ export const securepassword = async (password)=>{
     try {
         const hashpassword  = await bcrypt.hash(password,10)
         return hashpassword
-        
     } catch (error) {
         next("Bcrypt SecurePassword")
     }

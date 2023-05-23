@@ -4,7 +4,7 @@ const authMiddleware = async (req, res, next) => {
 
     const authorization = req.headers.authorization
     if (!authorization) {
-        next("Authrization Failed")
+      return  next("Authrization Failed")
     }
 
     try {

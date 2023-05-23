@@ -65,7 +65,6 @@ export const deleteJobcontroller = async (req, res, next) => {
 
 export const aggregatecontroller = async (req, res, next) => {
     try {
-        console.log(req.user.userId)
         const aggrigate = await JobModal.aggregate([
             {
                 $match: { workType: "full-time" }
@@ -77,7 +76,6 @@ export const aggregatecontroller = async (req, res, next) => {
                 }
             }
         ])
-        console.log(aggrigate, "aggrogate")
         res.status(200).send({ msg: "Data Success", totalJobs: aggrigate.length, data: aggrigate })
     } catch (error) {
         next(error)

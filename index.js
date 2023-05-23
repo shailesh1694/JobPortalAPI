@@ -23,7 +23,7 @@ app.use(cors())
 app.use(morgan("combined"))
 
 //cors  because from and backend use dirrent port so get this type error
-app.use("/test-api/v1", loginrouter)
+app.use("/user-api/v1", loginrouter)
 app.use("/update-api/v1", updaterouter)
 app.use("/job-api/v1", jobrouter)
 app.use("/file-api/v1", uploadrouter)
