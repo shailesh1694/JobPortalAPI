@@ -8,10 +8,12 @@ import loginrouter from './routes/registerRoute.js'
 import updaterouter from './routes/updateRoute.js'
 import jobrouter from './routes/jobRoute.js'
 import uploadrouter from './routes/uploadfile.js'
+import { Server } from "socket.io";
 
 
 const app = express()
 const PORT = process.env.PORT || 2000
+
 
 //ConnetToMongoDb
 connectMD()

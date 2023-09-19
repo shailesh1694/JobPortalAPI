@@ -38,7 +38,7 @@ export const loginController = async (req, res, next) => {
             msg: "Login Successfull"
         })
     } catch (error) {
-        console.log(error)
+        next(error)
     }
 }
 
